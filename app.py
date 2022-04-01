@@ -10,14 +10,13 @@ import random, string
 from sqlalchemy import null
 import cx_Oracle
 
-## Oracle 連線
-# cx_Oracle.init_oracle_client(lib_dir="./instantclient_19_8") # init Oracle instant client 位置
-# connection = cx_Oracle.connect('account', 'password', cx_Oracle.makedsn('ip', 1521, 'orcl')) # 連線資訊
-# cursor = connection.cursor()
-
+cx_Oracle.init_oracle_client(lib_dir="/Users/marco/instantclient_19_8") # init Oracle instant client 位置
+db = connection = cx_Oracle.connect('group2', 'group22', cx_Oracle.makedsn('140.117.69.58', 1521, 'orcl')) # 連線資訊
+cursor = connection.cursor()
+print(db.version)
 ## Flask-Login : 確保未登入者不能使用系統
 app = Flask(__name__)
-app.secret_key = 'Your Key'  
+app.secret_key = 'sgdheewetwggsdfsdfsdgdf'  
 login_manager = LoginManager(app)
 login_manager.login_view = 'login' # 假如沒有登入的話，要登入會導入 login 這個頁面
 
@@ -26,11 +25,12 @@ class User(UserMixin):
     pass
 
 @login_manager.user_loader
-def user_loader(userid):  
+def user_loader(userid): 
+    print("sss:"+userid) 
     user = User()
     user.id = userid
-    cursor.prepare('SELECT IDENTITY, NAME FROM MEMBER WHERE MID = :id ')
-    cursor.execute(None, {'id':userid})
+    sql = 'SELECT IDEN, EMAIL FROM USER2 WHERE EMAIL =' + '\''+ userid + '\''
+    cursor.execute(sql)
     data = cursor.fetchone()
     user.role = data[0]
     user.name = data[1]
@@ -50,19 +50,22 @@ def login():
         password = request.form['password']
 
         # 查詢看看有沒有這個資料
-        # sql = 'SELECT ACCOUNT, PASSWORD, MID, IDENTITY, NAME FROM MEMBER WHERE ACCOUNT = \'' + account + '\''
-        # cursor.execute(sql)
-        cursor.prepare('SELECT ACCOUNT, PASSWORD, MID, IDENTITY, NAME FROM MEMBER WHERE ACCOUNT = :id ')
-        cursor.execute(None, {'id': account})
+        sql = 'SELECT UID2 , UPASSWORD, EMAIL, IDEN , PHONE FROM USER2 WHERE EMAIL =' + '\''+ account + '\''
+        print(sql)
+        cursor.execute(sql)
+        # cursor.prepare('SELECT UID2, EMAIL, PHONE FROM USER2 WHERE EMAIL = :id')
+        # cursor.execute(None, {'id': account})
 
         data = cursor.fetchall() # 抓去這個帳號的資料
 
         # 但是可能他輸入的是沒有的，所以下面我們 try 看看抓不抓得到
         try:
             DB_password = data[0][1] # true password
+            print(DB_password)
             user_id = data[0][2] # user_id
+            print(user_id)
             identity = data[0][3] # user or manager
-
+            print(identity)
         # 抓不到的話 flash message '沒有此帳號' 給頁面
         except:
             flash('*沒有此帳號')
@@ -133,7 +136,7 @@ def bookstore():
         pid = request.args['pid']
 
         # 查詢這本書的詳細資訊
-        cursor.prepare('SELECT * FROM PRODUCT WHERE PID = :id ')
+        cursor.prepare('SELECT * FROM HOTEL WHERE PID = :id ')
         cursor.execute(None, {'id': pid})
 
         data = cursor.fetchone() 
@@ -152,7 +155,7 @@ def bookstore():
         return render_template('product.html', data = product)
 
     # 沒有收到 pid 的 request 的話，代表只是要看所有的書
-    sql = 'SELECT * FROM PRODUCT'
+    sql = 'SELECT * FROM HOTEL'
     cursor.execute(sql)
     book_row = cursor.fetchall()
     book_data = []
@@ -582,5 +585,5 @@ def logout():
 
 if __name__ == '__main__':
     app.debug = True #easy to debug
-    app.secret_key = "Your Key"
+    app.secret_key = "sgdheewetwggsdfsdfsdgdf"
     app.run()
