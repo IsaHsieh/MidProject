@@ -279,26 +279,42 @@ def add_product():
         connection.commit()
 
     else:
-        cursor.prepare('SELECT AMOUNT FROM RECORD WHERE TNO = :id and hid=:hid')
+        cursor.prepare('SELECT AMOUNT FROM RECORD WHERE TNO = :id and HID=:hid')
         cursor.execute(None, {'id': tno, 'hid':hid})
-        amount = cursor.fetchone()[0]
-        total = (amount+1)*int(price)
-        cursor.prepare('UPDATE RECORD SET AMOUNT=:amount, TOTAL=:total WHERE hid=:hid and TNO=:tno')
-        cursor.execute(None, {'amount':amount+1, 'tno':tno , 'hid':hid, 'total':total})
+        print(tno)
+        print(hid)
+        data = cursor.fetchall()
+        print(len(data))
+        if len(data) == 0:
+            one = '1'
+            print("沒資料")
+            sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ' , ' + '\''+ one + '\'' +  ')'
+           
+            print("11:"+sql)
+            cursor.execute(sql)
+            connection.commit()
+        else: 
+            cursor.prepare('SELECT AMOUNT FROM RECORD WHERE TNO = :id and HID=:hid')
+            cursor.execute(None, {'id': tno, 'hid':hid})
+            amount = cursor.fetchone()[0]
+            print("有資料") 
+            cursor.prepare('UPDATE RECORD SET AMOUNT=:amount WHERE hid=:hid and TNO=:tno')
+            cursor.execute(None, {'amount':amount+1, 'tno':tno , 'hid':hid})
     
     sql = 'SELECT * FROM RECORD WHERE TNO = '+ '\''+ tno +'\''
     print("5:"+sql)
     cursor.execute(sql)
     product_row = cursor.fetchall()
+    print(product_row)
     product_data = []
     for i in product_row:
-        sql = 'SELECT PNAME FROM HOTEL WHERE HID =' + i[2]
+        sql = 'SELECT HNAME FROM HOTEL WHERE HID =' + '\''+ i[3] + '\''
         cursor.execute(sql)
         price = cursor.fetchone()[0]    
         product = {
-            '商品編號': i[1],
+            '商品編號': i[3],
             '商品名稱': price,
-            '商品價格': i[3],
+            '商品價格': i[1],
             '數量': i[2]
         }
         product_data.append(product)
@@ -354,12 +370,12 @@ def only_cart():
         sql = 'SELECT HNAME FROM HOTEL WHERE HID =' + '\'' + i[3] + '\''
         print("6:"+ sql)
         cursor.execute(sql)
-        price = cursor.fetchone()[0] 
+        NAME = cursor.fetchone()[0] 
         product = {
-            '商品編號': i[1],
-            '商品名稱': price,
-            '商品價格': i[3],
-            '數量': i[2]
+            '商品編號': i[3],
+            '商品名稱': NAME,
+            '商品價格': i[1],
+            '數量': i[4]
         }
         product_data.append(product)
     
