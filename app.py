@@ -131,13 +131,13 @@ def bookstore():
             flash('No permission')
             return redirect(url_for('manager'))
 
-    # 查看書本的詳細資料（假如有收到 pid 的 request）
-    if 'pid' in request.args:
-        pid = request.args['pid']
+    # 查看書本的詳細資料（假如有收到 hid 的 request）
+    if 'hid' in request.args:
+        hid = request.args['hid']
 
         # 查詢這本書的詳細資訊
-        cursor.prepare('SELECT * FROM HOTEL WHERE PID = :id ')
-        cursor.execute(None, {'id': pid})
+        cursor.prepare('SELECT * FROM HOTEL WHERE HID = :id ')
+        cursor.execute(None, {'id': hid})
 
         data = cursor.fetchone() 
         pname = data[1]
@@ -145,7 +145,7 @@ def bookstore():
         category = data[3]
 
         product = {
-            '商品編號': pid,
+            '商品編號': hid,
             '商品名稱': pname,
             '單價': price,
             '類別': category
@@ -154,7 +154,7 @@ def bookstore():
         # 把抓到的資料用 json 格式傳給 projuct.html 
         return render_template('product.html', data = product)
 
-    # 沒有收到 pid 的 request 的話，代表只是要看所有的書
+    # 沒有收到 hid 的 request 的話，代表只是要看所有的書
     sql = 'SELECT * FROM HOTEL'
     cursor.execute(sql)
     book_row = cursor.fetchall()
@@ -180,21 +180,22 @@ def cart():
             flash('No permission')
             return redirect(url_for('manager'))
 
-    # 回傳有 pid 代表要 加商品
+    # 回傳有 hid 代表要 加商品
     if request.method == 'POST':
         
-        if "pid" in request.form :
+        if "hid" in request.form :
             product_data = add_product()
 
         elif "delete" in request.form :
-            pid = request.values.get('delete')
+            hid = request.values.get('delete')
             user_id = current_user.id #找到現在使用者是誰
-            cursor.prepare('SELECT * FROM CART WHERE MID = :id ')
-            cursor.execute(None, {'id': user_id})
+            sql = 'SELECT * FROM CART WHERE EMAIL =' + '\'' +user_id + '\''
+            cursor.execute(sql)
             tno = cursor.fetchone()[2] # 交易編號
-
-            cursor.prepare(' DELETE FROM RECORD WHERE TNO=:tno and PID=:pid ')
-            cursor.execute(None, {'tno': tno, 'pid':pid})
+   
+            sql  = 'DELETE FROM RECORD WHERE TNO =' + '\'' + tno + '\'' + ' and ' + 'HID = ' + '\''+ hid + '\''
+            print('7:'+sql)
+            cursor.execute(sql)
             connection.commit() # 把這個刪掉
 
             product_data = only_cart()
@@ -214,16 +215,15 @@ def cart():
         elif "order" in request.form:
 
             user_id = current_user.id #找到現在使用者是誰
-            cursor.prepare('SELECT * FROM CART WHERE MID = :id ')
-            cursor.execute(None, {'id': user_id})
+            sql = 'SELECT * FROM CART WHERE EMAIL =' + user_id
+            cursor.execute(sql)
             tno = cursor.fetchone()[2] # 交易編號
 
             cursor.prepare('SELECT SUM(TOTAL) FROM RECORD WHERE TNO=:tno ')
             cursor.execute(None, {'tno': tno})
             total = cursor.fetchone()[0] # 總金額
-            
-            cursor.prepare('DELETE FROM CART WHERE MID = :id ')
-            cursor.execute(None, {'id': user_id})
+            sql = 'DELETE FROM CART WHERE EMAIL = '+user_id
+            cursor.execute(sql)
             connection.commit() # 把這個刪掉
 
             time = str(datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
@@ -245,52 +245,55 @@ def cart():
 
 def add_product():
     user_id = current_user.id #找到現在使用者是誰
-    cursor.prepare('SELECT * FROM CART WHERE MID = :id ')
-    cursor.execute(None, {'id': user_id})
+    sql = 'SELECT * FROM CART WHERE EMAIL =' + '\''+ user_id + '\''
+    cursor.execute(sql)
     data = cursor.fetchone()
 
     if( data == None): #假如購物車裡面沒有他的資料
         time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cursor.prepare('INSERT INTO CART VALUES (:id, :time, cart_tno_seq.nextval)')
-        cursor.execute(None, {'id': user_id, 'time':time})
+        sql = 'INSERT INTO CART VALUES (' + '\'' + user_id + '\'' +  ',' + '\'' + time + '\'' + ')'
+        print(sql)
+        cursor.execute(sql)
         connection.commit()
-        
-        cursor.prepare('SELECT * FROM CART WHERE MID = :id ')
-        cursor.execute(None, {'id': user_id})
+        sql = 'SELECT * FROM CART WHERE EMAIL =' + '\'' +user_id 
+        cursor.execute(sql)
         data = cursor.fetchone()
     
     tno = data[2] # 使用者有購物車了，購物車的交易編號是什麼
-    pid = request.values.get('pid') # 使用者想要購買的東西
-    
-    cursor.prepare('SELECT * FROM RECORD WHERE PID = :id and TNO = :tno')
-    cursor.execute(None, {'id': pid, 'tno':tno})
+    hid = request.values.get('hid') # 使用者想要購買的東西
+    sql = 'SELECT * FROM RECORD WHERE EMAIL =' +'\''+user_id + '\''+  ' and ' + 'TNO = ' + '\'' + tno +'\''
+    print("2:"+sql)
+    cursor.execute(sql)
     product = cursor.fetchone()    
 
-    cursor.prepare('SELECT PRICE FROM PRODUCT WHERE PID = :id ')
-    cursor.execute(None, {'id': pid})
+    sql = 'SELECT PRICE FROM HOTEL WHERE hid = ' +'\''+ hid +'\''
+    print("3:"+sql)
+    cursor.execute(sql)
     price = cursor.fetchone()[0]
-
+    
     # 如果購物車裡面沒有的話 把他加一個進去
     if(product == None):
-        cursor.prepare('INSERT INTO RECORD VALUES (:id, :tno, 1, :price, :total)')
-        cursor.execute(None, {'id': tno, 'tno':pid, 'price':price, 'total':price})
+        sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ')'
+        print("4:"+sql)
+        cursor.execute(sql)
         connection.commit()
 
     else:
-        cursor.prepare('SELECT AMOUNT FROM RECORD WHERE TNO = :id and PID=:pid')
-        cursor.execute(None, {'id': tno, 'pid':pid})
+        cursor.prepare('SELECT AMOUNT FROM RECORD WHERE TNO = :id and hid=:hid')
+        cursor.execute(None, {'id': tno, 'hid':hid})
         amount = cursor.fetchone()[0]
         total = (amount+1)*int(price)
-        cursor.prepare('UPDATE RECORD SET AMOUNT=:amount, TOTAL=:total WHERE PID=:pid and TNO=:tno')
-        cursor.execute(None, {'amount':amount+1, 'tno':tno , 'pid':pid, 'total':total})
+        cursor.prepare('UPDATE RECORD SET AMOUNT=:amount, TOTAL=:total WHERE hid=:hid and TNO=:tno')
+        cursor.execute(None, {'amount':amount+1, 'tno':tno , 'hid':hid, 'total':total})
     
-    cursor.prepare('SELECT * FROM RECORD WHERE TNO = :id')
-    cursor.execute(None, {'id': tno})
+    sql = 'SELECT * FROM RECORD WHERE TNO = '+ '\''+ tno +'\''
+    print("5:"+sql)
+    cursor.execute(sql)
     product_row = cursor.fetchall()
     product_data = []
     for i in product_row:
-        cursor.prepare('SELECT PNAME FROM PRODUCT WHERE PID = :id')
-        cursor.execute(None, {'id': i[1]})
+        sql = 'SELECT PNAME FROM HOTEL WHERE HID =' + i[2]
+        cursor.execute(sql)
         price = cursor.fetchone()[0]    
         product = {
             '商品編號': i[1],
@@ -305,31 +308,33 @@ def add_product():
 def change_order():
 
     user_id = current_user.id #找到現在使用者是誰
-    cursor.prepare('SELECT * FROM CART WHERE MID = :id ')
-    cursor.execute(None, {'id': user_id})
+    sql = 'SELECT * FROM CART WHERE EMAIL =' + '\'' + user_id + '\''
+    cursor.execute(sql)
     data = cursor.fetchone()
 
     tno = data[2] # 使用者有購物車了，購物車的交易編號是什麼
-    cursor.prepare('SELECT * FROM RECORD WHERE TNO = :id')
-    cursor.execute(None, {'id': tno})
+
+    print ("tno:"+tno)
+    sql = 'SELECT * FROM RECORD WHERE TNO =' + '\'' + tno + '\''
+    cursor.execute(sql)
     product_row = cursor.fetchall()
-
-    for i in product_row:
+    print(product_row)
+    # for i in product_row:
         
-        # i[0]：交易編號 / i[1]：商品編號 / i[2]：數量 / i[3]：價格
-        if int(request.form[i[1]]) != i[2]:
-            cursor.prepare('UPDATE RECORD SET AMOUNT=:amount, TOTAL=:total WHERE PID=:pid and TNO=:tno')
-            cursor.execute(None, {'amount':request.form[i[1]], 'pid':i[1], 'tno':tno, 'total':int(request.form[i[1]])*int(i[3])})
-            connection.commit()
-            print('change')
+    #     # i[0]：交易編號 / i[1]：商品編號 / i[2]：數量 / i[3]：價格
+    #     if int(request.form[i[1]]) != i[2]:
+    #         cursor.prepare('UPDATE RECORD SET AMOUNT=:amount, TOTAL=:total WHERE hid=:hid and TNO=:tno')
+    #         cursor.execute(None, {'amount':request.form[i[1]], 'hid':i[1], 'tno':tno, 'total':int(request.form[i[1]])*int(i[3])})
+    #         connection.commit()
+    #         print('change')
 
-    return 0
+    # return 0
 
 
 def only_cart():
     user_id = current_user.id #找到現在使用者是誰
-    cursor.prepare('SELECT * FROM CART WHERE MID = :id ')
-    cursor.execute(None, {'id': user_id})
+    sql = 'SELECT * FROM CART WHERE EMAIL =' + '\''+user_id + '\''
+    cursor.execute(sql)
     data = cursor.fetchone()
 
     if( data == None): #假如購物車裡面沒有他的資料
@@ -338,14 +343,17 @@ def only_cart():
     
 
     tno = data[2] # 使用者有購物車了，購物車的交易編號是什麼
-    cursor.prepare('SELECT * FROM RECORD WHERE TNO = :id')
-    cursor.execute(None, {'id': tno})
+    sql = 'SELECT * FROM RECORD WHERE TNO =' +'\''+ tno +'\''
+    print("1:"+sql)
+    cursor.execute(sql)
     product_row = cursor.fetchall()
     product_data = []
-
+    print(product_row)
     for i in product_row:
-        cursor.prepare('SELECT PNAME FROM PRODUCT WHERE PID = :id')
-        cursor.execute(None, {'id': i[1]})
+        print("qqqqq:"+i[3])
+        sql = 'SELECT HNAME FROM HOTEL WHERE HID =' + '\'' + i[3] + '\''
+        print("6:"+ sql)
+        cursor.execute(sql)
         price = cursor.fetchone()[0] 
         product = {
             '商品編號': i[1],
@@ -368,23 +376,23 @@ def manager():
 
     if 'delete' in request.values: #要刪除
 
-        pid = request.values.get('delete')
+        hid = request.values.get('delete')
 
         # 看看 RECORD 裡面有沒有需要這筆產品的資料
-        cursor.prepare('SELECT * FROM RECORD WHERE PID=:pid')
-        cursor.execute(None, {'pid':pid})
+        cursor.prepare('SELECT * FROM RECORD WHERE hid=:hid')
+        cursor.execute(None, {'hid':hid})
         data = cursor.fetchone() #可以抓一筆就好了，假如有的話就不能刪除
         
         if(data != None):
             flash('faild')
         else:
-            cursor.prepare('DELETE FROM PRODUCT WHERE PID = :id ')
-            cursor.execute(None, {'id': pid})
+            cursor.prepare('DELETE FROM PRODUCT WHERE hid = :id ')
+            cursor.execute(None, {'id': hid})
             connection.commit() # 把這個刪掉
 
     elif 'edit' in request.values: #要修改
-            pid = request.values.get('edit')
-            return redirect(url_for('edit', pid=pid))
+            hid = request.values.get('edit')
+            return redirect(url_for('edit', hid=hid))
 
     book_data = book()
 
@@ -416,12 +424,12 @@ def edit():
             return redirect(url_for('bookstore'))
 
     if request.method == 'POST':
-        pid = request.values.get('pid')
+        hid = request.values.get('hid')
         new_name = request.values.get('name')
         new_price = request.values.get('price')
         new_category = request.values.get('category')
-        cursor.prepare('UPDATE PRODUCT SET PNAME=:name, PRICE=:price, CATEGORY=:category WHERE PID=:pid')
-        cursor.execute(None, {'name':new_name, 'price':new_price,'category':new_category, 'pid':pid})
+        cursor.prepare('UPDATE PRODUCT SET PNAME=:name, PRICE=:price, CATEGORY=:category WHERE hid=:hid')
+        cursor.execute(None, {'name':new_name, 'price':new_price,'category':new_category, 'hid':hid})
         connection.commit()
         
         return redirect(url_for('manager'))
@@ -432,9 +440,9 @@ def edit():
 
 
 def show_info():
-    pid = request.args['pid']
-    cursor.prepare('SELECT * FROM PRODUCT WHERE PID = :id ')
-    cursor.execute(None, {'id': pid})
+    hid = request.args['hid']
+    cursor.prepare('SELECT * FROM PRODUCT WHERE hid = :id ')
+    cursor.execute(None, {'id': hid})
 
     data = cursor.fetchone() #password
     pname = data[1]
@@ -442,7 +450,7 @@ def show_info():
     category = data[3]
 
     product = {
-        '商品編號': pid,
+        '商品編號': hid,
         '商品名稱': pname,
         '單價': price,
         '類別': category
@@ -454,15 +462,15 @@ def add():
 
     if request.method == 'POST':
     
-        cursor.prepare('SELECT * FROM PRODUCT WHERE PID=:pid')
+        cursor.prepare('SELECT * FROM PRODUCT WHERE hid=:hid')
         data = ""
 
         while ( data != None): #裡面沒有才跳出回圈
 
             number = str(random.randrange( 10000, 99999))
             en = random.choice(string.ascii_letters)
-            pid = en + number #隨機編號
-            cursor.execute(None, {'pid':pid})
+            hid = en + number #隨機編號
+            cursor.execute(None, {'hid':hid})
             data = cursor.fetchone()
 
         name = request.values.get('name')
@@ -472,8 +480,8 @@ def add():
         if ( len(name) < 1 or len(price) < 1): #使用者沒有輸入
             return redirect(url_for('manager'))
 
-        cursor.prepare('INSERT INTO PRODUCT VALUES (:pid, :name, :price, :category)')
-        cursor.execute(None, {'pid': pid, 'name':name, 'price':price, 'category':category })
+        cursor.prepare('INSERT INTO PRODUCT VALUES (:hid, :name, :price, :category)')
+        cursor.execute(None, {'hid': hid, 'name':name, 'price':price, 'category':category })
         connection.commit()
 
         return redirect(url_for('manager'))
@@ -484,20 +492,20 @@ def add():
 def order():
 
     user_id = current_user.id #找到現在使用者是誰
-    cursor.prepare('SELECT * FROM CART WHERE MID = :id ')
+    cursor.prepare('SELECT * FROM CART WHERE EMAIL = :id ')
     cursor.execute(None, {'id': user_id})
     data = cursor.fetchone()
     
     tno = data[2] # 使用者有購物車了，購物車的交易編號是什麼
 
-    cursor.prepare('SELECT * FROM RECORD WHERE TNO = :id')
-    cursor.execute(None, {'id': tno})
+    sql = 'SELECT * FROM RECORD WHERE TNO = '+ tno + '\''
+    cursor.execute(sql)
     product_row = cursor.fetchall()
     product_data = []
 
     for i in product_row:
-        cursor.prepare('SELECT PNAME FROM PRODUCT WHERE PID = :id')
-        cursor.execute(None, {'id': i[1]})
+        sql = 'SELECT PNAME FROM PRODUCT WHERE hid =' + i[1]
+        cursor.execute(sql)
         price = cursor.fetchone()[0] 
         product = {
             '商品編號': i[1],
@@ -539,7 +547,7 @@ def dashboard():
             for k in row:
                 dataa.append(k[1])
         
-    cursor.prepare('SELECT SUM(TOTAL), CATEGORY FROM(SELECT * FROM PRODUCT,RECORD WHERE PRODUCT.PID = RECORD.PID) GROUP BY CATEGORY')
+    cursor.prepare('SELECT SUM(TOTAL), CATEGORY FROM(SELECT * FROM PRODUCT,RECORD WHERE PRODUCT.hid = RECORD.hid) GROUP BY CATEGORY')
     cursor.execute(None)
     row = cursor.fetchall()
     datab = []
@@ -550,7 +558,7 @@ def dashboard():
         }
         datab.append(temp)
     
-    cursor.prepare('SELECT SUM(PRICE), MEMBER.MID, MEMBER.NAME FROM ORDER_LIST, MEMBER WHERE ORDER_LIST.MID = MEMBER.MID AND MEMBER.IDENTITY = :identity AND ROWNUM<=5 GROUP BY MEMBER.MID, MEMBER.NAME ORDER BY SUM(PRICE) DESC')
+    cursor.prepare('SELECT SUM(PRICE), MEMBER.EMAIL, MEMBER.NAME FROM ORDER_LIST, MEMBER WHERE ORDER_LIST.MID = MEMBER.MID AND MEMBER.IDENTITY = :identity AND ROWNUM<=5 GROUP BY MEMBER.MID, MEMBER.NAME ORDER BY SUM(PRICE) DESC')
     cursor.execute(None, {'identity':'user'})
     row = cursor.fetchall()
     
