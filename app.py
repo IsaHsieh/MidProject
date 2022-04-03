@@ -270,10 +270,10 @@ def add_product():
     print("3:"+sql)
     cursor.execute(sql)
     price = cursor.fetchone()[0]
-    
+    one = '1'
     # 如果購物車裡面沒有的話 把他加一個進去
     if(product == None):
-        sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ')'
+        sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ' , ' + '\''+ one + '\'' +  ')'
         print("4:"+sql)
         cursor.execute(sql)
         connection.commit()
@@ -286,7 +286,7 @@ def add_product():
         data = cursor.fetchall()
         print(len(data))
         if len(data) == 0:
-            one = '1'
+            
             print("沒資料")
             sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ' , ' + '\''+ one + '\'' +  ')'
            
@@ -393,7 +393,7 @@ def manager():
     if 'delete' in request.values: #要刪除
 
         hid = request.values.get('delete')
-
+        print("刪除刪除刪除刪除刪除刪除")
         # 看看 RECORD 裡面有沒有需要這筆產品的資料
         cursor.prepare('SELECT * FROM RECORD WHERE hid=:hid')
         cursor.execute(None, {'hid':hid})
