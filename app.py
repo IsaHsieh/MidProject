@@ -9,7 +9,6 @@ from numpy import identity, product
 import random, string
 from sqlalchemy import null
 import cx_Oracle
-
 cx_Oracle.init_oracle_client(lib_dir="/Users/marco/instantclient_19_8") # init Oracle instant client 位置
 db = connection = cx_Oracle.connect('group2', 'group22', cx_Oracle.makedsn('140.117.69.58', 1521, 'orcl')) # 連線資訊
 cursor = connection.cursor()
@@ -93,28 +92,35 @@ def login():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        user_name = request.form['username']
-        user_account = request.form['account']
-        user_password = request.form['password']
+        user_email = request.form['username']
+        user_password = request.form['account']
+        user_phone = request.form['password']
         user_identity = request.form['identity']
         
         # 抓取所有的會員帳號，因為下面要比對是否已經有這個帳號
-        check_account =""" SELECT ACCOUNT FROM MEMBER """
+        check_account =""" SELECT EMAIL FROM USER2 """
         cursor.execute(check_account)
         exist_account = cursor.fetchall()
         account_list = []
         for i in exist_account:
             account_list.append(i[0])
 
-        if(user_account in account_list):
+        if(user_email in account_list):
             # 如果已經有這個帳號，就會給一個 flash message : 上面會顯示已經有這個帳號了
             flash('Falid!')
             return redirect(url_for('register'))
         else:
             # 在 SQL 裡有設定 member id 是 auto increment 所以第一個值給：null
             # 可參考的設定連結：https://www.abu.tw/2008/06/oracle-autoincrement.html
-            cursor.prepare('INSERT INTO MEMBER VALUES (null, :name, :account, :password, :identity)')
-            cursor.execute(None, {'name': user_name, 'account':user_account, 'password':user_password, 'identity':user_identity })
+            sql = 'SELECT UID2 FROM USER2 Order by UID2  desc'
+            cursor.execute(sql)
+            uid = cursor.fetchone()[0]
+            uid = int(uid) +1
+            uid2 = str(uid).zfill(3)
+            print(uid2)
+            sql = 'INSERT INTO USER2 VALUES (' + '\'' + uid2 + '\'' + ',' + '\''+ user_email +'\'' + ',' + '\'' + user_password + '\'' + ',' + '\'' + user_phone + '\'' + ',' + '\'' + user_identity + '\'' + ')'
+            print(sql)
+            cursor.execute(sql)
             connection.commit()
             return redirect(url_for('login'))
 
@@ -250,12 +256,20 @@ def add_product():
     data = cursor.fetchone()
 
     if( data == None): #假如購物車裡面沒有他的資料
+        
+
+
+
+        random1 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+        print(random1)
+        
+        
         time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        sql = 'INSERT INTO CART VALUES (' + '\'' + user_id + '\'' +  ',' + '\'' + time + '\'' + ')'
+        sql = 'INSERT INTO CART VALUES (' + '\'' + user_id + '\'' +  ',' + '\'' + time + '\'' + ',' + '\'' + random1 + '\'' ')'
         print(sql)
         cursor.execute(sql)
         connection.commit()
-        sql = 'SELECT * FROM CART WHERE EMAIL =' + '\'' +user_id 
+        sql = 'SELECT * FROM CART WHERE EMAIL =' + '\'' +user_id +'\''
         cursor.execute(sql)
         data = cursor.fetchone()
     

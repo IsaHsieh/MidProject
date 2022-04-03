@@ -14,11 +14,11 @@
 <div class="form_div">
     <form  method='post' action={{ url_for('register') }} >
         <p>
-            姓名：<input type="text" name="username" required/>
+            EMAIL：<input type="text" name="username" required/>
         </p>
 
         <div >
-            帳號：<input type="text" name="account" required/>
+            密碼：<input type="password" name="account" required/>
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             <p class="same_accoount">
@@ -29,13 +29,13 @@
         </div>
 
         <p>
-            密碼：<input type="password" name="password" required/>
+            電話：<input type="text" name="password" required/>
         </p>
         <div class="btn_div">
             <p class="option_div">選擇你要註冊的身份：</p>
             <select name="identity">
                 <option value="user" selected>使用者</option>
-                <option value="manager" >管理員</option>
+                <!-- <option value="manager" >管理員</option> -->
             </select>
         </div>
 
