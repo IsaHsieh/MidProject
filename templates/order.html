@@ -7,7 +7,7 @@
 
 {% block content%}
 <div class="btn_div">
-  <h1 class="book_title left">31 Lab Book Store</h1>
+  <h1 class="book_title left">Hotels Notebook.</h1>
   <a href="{{ url_for('cart') }}"><img class="cart" src="{{ url_for('static', filename='./image/shopping_cart.png') }}"></a>
 </div>
 
@@ -15,9 +15,9 @@
   <form method="post" action={{ url_for('cart') }}>
     <table cellpadding="10" border='3'>
       <tr>
-        <th>商品編號</th>
-        <th>商品名稱</th>
-        <th>商品價格</th>
+        <th>飯店編號</th>
+        <th>飯店名稱</th>
+        <th>飯店價格</th>
         <th>數量</th>
       </tr>
       {% for book in data %}
