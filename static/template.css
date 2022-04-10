@@ -1,18 +1,28 @@
 body {
-    font-family: Helvetica, Arial, sans-serif;
-    background-color: #D7D7D7;
+    font-family: "Noto Sans TC","Segoe UI", Arial, sans-serif;
+    background-image: url('./image/background.png');
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-color: #FCF8EC;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
 }
-.index_pic{
+
+/*.index_pic{
     height: 300px;
     margin:auto;
     display:block;
     margin-bottom: 50px;
-}
+}*/
+
 .index_title{
-    text-align: center;
-    font-size: 60px;
+    text-align: left;
+    font-size: 50px;
+    margin-left: 10%;
     margin-bottom:0px;
-    margin-top: 50px;
+    margin-top:20%;
+    color:#456268;
 }
 .book_title{
     text-align: center;
@@ -26,11 +36,11 @@ body {
     margin-top: 0px;
 }
 .index_btn{
-    width: 300px;
+    width: 100px;
     height: 50px;
     font-size: 30px;
-    margin: 10px;
-    background-color: #97A38D;
+    margin: 20px;
+    background-color: #79A3B1;
     color:white;
     border-radius: 10px;
     border: 0px;
@@ -40,8 +50,10 @@ body {
     opacity: 0.8;
 }
 .btn_div{
-    display: flex;
-    justify-content: center;
+    display:flex;
+    justify-content: left;
+    margin-top:40px;
+    margin-left: 14%;
 
 }
 .option_div{
