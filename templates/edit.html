@@ -4,7 +4,7 @@
 
 {% endblock head %}
 
-{% block title %}BookStore{% endblock title%}
+{% block title %}Hotels Notebook.{% endblock title%}
 
 {% block content%}
 
@@ -21,11 +21,11 @@
         <td><input type="text" value="{{ data.商品名稱 }}" name="name" ></td>
       </tr>
       <tr>
-        <th>單價</th>
+        <th>地點</th>
         <td><input type="text" value="{{ data.單價 }}" name="price"></td>
       </tr>
       <tr>
-        <th>類別</th>
+        <th>敘述</th>
         <td>
           <select name="category">
             {% if data.類別 == 'CD' %}

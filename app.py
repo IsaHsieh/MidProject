@@ -9,8 +9,8 @@ from numpy import identity, product
 import random, string
 from sqlalchemy import null
 import cx_Oracle
-cx_Oracle.init_oracle_client(lib_dir="/Users/marco/instantclient_19_8") # Marco's init Oracle instant client 位置
-#cx_Oracle.init_oracle_client(lib_dir="C:/Users/Isa/instantclient_21_3") # Isa's init Oracle instant client 位置
+#cx_Oracle.init_oracle_client(lib_dir="/Users/marco/instantclient_19_8") # Marco's init Oracle instant client 位置
+cx_Oracle.init_oracle_client(lib_dir="C:/Users/Isa/instantclient_21_3") # Isa's init Oracle instant client 位置
 db = connection = cx_Oracle.connect('group2', 'group22', cx_Oracle.makedsn('140.117.69.58', 1521, 'orcl')) # 連線資訊
 cursor = connection.cursor()
 print(db.version)
