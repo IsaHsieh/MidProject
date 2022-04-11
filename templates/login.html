@@ -6,12 +6,12 @@
 {% block title %}Hotels Notebook. Login Page {% endblock title%}
 
 {% block content%}
-<a href="{{ url_for('index') }}"><img class="icon" src="{{ url_for('static', filename='./image/shop.png') }}"></a>
-<h1 class="register_title">會員登入</h1>
+<!--<a href="{{ url_for('index') }}"><img class="icon" src="{{ url_for('static', filename='./image/shop.png') }}"></a>-->
+<!--<h1 class="register_title">登入</h1>-->
 <div class="form_div">
     <form  method='post' action={{ url_for('login') }} >
         <p >
-            帳號：<input type="text" name="account" required/>
+            信箱：<input type="text" name="account" required/>
         </p>
         <p>
             密碼：<input type="password" name="password" required/>
@@ -28,7 +28,7 @@
         </p>
         <p>
             <a href="{{ url_for('index') }}">
-                <button type="button" class="register_btn">回上頁</button>
+                <button type="button" class="register_btn">返回</button>
             </a>
             <button type="submit" class="register_btn">登入</button>
         </p>

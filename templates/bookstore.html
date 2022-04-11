@@ -12,7 +12,7 @@
   <a href="{{ url_for('logout') }}"  title="登出"><img class="logout" src="{{ url_for('static', filename='./image/logout.png') }}"></a>
 </div>
 <div class="btn_div">
-  <p class="welcome">歡迎 , 使用者：{{user}}</p>
+  <p class="welcome">{{user}} , 歡迎回來!</p>
 </div>
 
 {% with messages = get_flashed_messages() %}
@@ -20,7 +20,7 @@
   
 <script language="javascript">
 
-  alert('您沒有管理員的權限喔！');
+  alert('您沒有管理員的權限');
 
 </script>
 
