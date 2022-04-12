@@ -9,8 +9,8 @@ from numpy import identity, product
 import random, string
 from sqlalchemy import null
 import cx_Oracle
-#cx_Oracle.init_oracle_client(lib_dir="/Users/marco/instantclient_19_8") # Marco's init Oracle instant client 位置
-cx_Oracle.init_oracle_client(lib_dir="C:/Users/Isa/instantclient_21_3") # Isa's init Oracle instant client 位置
+cx_Oracle.init_oracle_client(lib_dir="/Users/marco/instantclient_19_8") # Marco's init Oracle instant client 位置
+# cx_Oracle.init_oracle_client(lib_dir="C:/Users/Isa/instantclient_21_3") # Isa's init Oracle instant client 位置
 db = connection = cx_Oracle.connect('group2', 'group22', cx_Oracle.makedsn('140.117.69.58', 1521, 'orcl')) # 連線資訊
 cursor = connection.cursor()
 print(db.version)
@@ -417,7 +417,7 @@ def manager():
         if(data != None):
             flash('faild')
         else:
-            cursor.prepare('DELETE FROM PRODUCT WHERE hid = :id ')
+            cursor.prepare('DELETE FROM HOTEL WHERE hid = :id ')
             cursor.execute(None, {'id': hid})
             connection.commit() # 把這個刪掉
 
@@ -430,7 +430,7 @@ def manager():
     return render_template('manager.html', book_data=book_data, user=current_user.name)
 
 def book():
-    sql = 'SELECT * FROM PRODUCT'
+    sql = 'SELECT * FROM HOTEL'
     cursor.execute(sql)
     book_row = cursor.fetchall()
     book_data = []
@@ -457,10 +457,11 @@ def edit():
     if request.method == 'POST':
         hid = request.values.get('hid')
         new_name = request.values.get('name')
+        new_address = request.values.get('address')
         new_price = request.values.get('price')
         new_category = request.values.get('category')
-        cursor.prepare('UPDATE PRODUCT SET PNAME=:name, PRICE=:price, CATEGORY=:category WHERE hid=:hid')
-        cursor.execute(None, {'name':new_name, 'price':new_price,'category':new_category, 'hid':hid})
+        cursor.prepare('UPDATE HOTEL SET HNAME=:name,HADD=:address, PRICE=:price, HDEC=:category WHERE hid=:hid')
+        cursor.execute(None, {'name':new_name, 'address':new_address, 'price':new_price,'category':new_category, 'hid':hid})
         connection.commit()
         
         return redirect(url_for('manager'))
@@ -472,17 +473,19 @@ def edit():
 
 def show_info():
     hid = request.args['hid']
-    cursor.prepare('SELECT * FROM PRODUCT WHERE hid = :id ')
+    cursor.prepare('SELECT * FROM HOTEL WHERE hid = :id ')
     cursor.execute(None, {'id': hid})
 
     data = cursor.fetchone() #password
     pname = data[1]
-    price = data[2]
+    address = data[2]
+    price = data[6]
     category = data[3]
 
     product = {
         '商品編號': hid,
         '商品名稱': pname,
+        '地點': address,
         '單價': price,
         '類別': category
     }
@@ -493,26 +496,26 @@ def add():
 
     if request.method == 'POST':
     
-        cursor.prepare('SELECT * FROM PRODUCT WHERE hid=:hid')
+        cursor.prepare('SELECT * FROM HOTEL WHERE hid=:hid')
         data = ""
 
         while ( data != None): #裡面沒有才跳出回圈
 
             number = str(random.randrange( 10000, 99999))
-            en = random.choice(string.ascii_letters)
-            hid = en + number #隨機編號
+            hid = 'h' + number #隨機編號
             cursor.execute(None, {'hid':hid})
             data = cursor.fetchone()
 
         name = request.values.get('name')
+        address = request.values.get('address')
         price = request.values.get('price')
         category = request.values.get('category')
+        platform = request.values.get('platform')
 
         if ( len(name) < 1 or len(price) < 1): #使用者沒有輸入
             return redirect(url_for('manager'))
-
-        cursor.prepare('INSERT INTO PRODUCT VALUES (:hid, :name, :price, :category)')
-        cursor.execute(None, {'hid': hid, 'name':name, 'price':price, 'category':category })
+        cursor.prepare('INSERT INTO HOTEL VALUES (:hid, :name, :address, :category , :location , :platform, :price )')
+        cursor.execute(None, {'hid': hid, 'name':name, 'address': address , 'category':category , 'location':address, 'platform':platform , 'price':price })
         connection.commit()
 
         return redirect(url_for('manager'))
@@ -535,7 +538,7 @@ def order():
     product_data = []
 
     for i in product_row:
-        sql = 'SELECT PNAME FROM PRODUCT WHERE hid =' + i[1]
+        sql = 'SELECT PNAME FROM HOTEL WHERE hid =' + i[1]
         cursor.execute(sql)
         price = cursor.fetchone()[0] 
         product = {

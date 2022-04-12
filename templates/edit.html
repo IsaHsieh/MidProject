@@ -14,7 +14,7 @@
     <table cellpadding="10" border='3'>
       <tr>
         <th>飯店編號</th>
-        <td><input type="text" value="{{ data.商品編號 }}" name="pid" readonly class="id_input"></td>
+        <td><input type="text" value="{{ data.商品編號 }}" name="hid" readonly class="id_input"></td>
       </tr>
       <tr>
         <th>飯店名稱</th>
@@ -22,27 +22,17 @@
       </tr>
       <tr>
         <th>地點</th>
+        <td><input type="text" value="{{ data.地點 }}" name="address"></td>
+      </tr>
+      <tr>
+        <th>價錢</th>
         <td><input type="text" value="{{ data.單價 }}" name="price"></td>
+  
       </tr>
       <tr>
         <th>敘述</th>
-        <td>
-          <select name="category">
-            {% if data.類別 == 'CD' %}
-              <option value="BOOK">BOOK</option>
-              <option value="DVD">DVD</option>
-              <option value="CD" selected>CD</option>
-            {% elif data.類別 == 'DVD' %}
-              <option value="BOOK">BOOK</option>
-              <option value="DVD" selected>DVD</option>
-              <option value="CD">CD</option>
-            {% else %}
-              <option value="BOOK" selected>BOOK</option>
-              <option value="DVD">DVD</option>
-              <option value="CD">CD</option>
-            {% endif %}
-            
-        </select>
+        <td><input type="text" value="{{ data.類別 }}" name="category"></td>
+  
       </tr>
     </table>
     <div class="btn_div">
