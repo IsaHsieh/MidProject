@@ -11,7 +11,7 @@
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
        </div>
-      <a href="{{ url_for('manager') }}" title="回書店管理"><img class="dash_manager" src="{{ url_for('static', filename='./image/shop.png') }}"></a>
+      <a href="{{ url_for('manager') }}" title="回飯店管理"><img class="dash_manager" src="{{ url_for('static', filename='./image/shop.png') }}"></a>
 
       <a href="{{ url_for('logout') }}" title="登出"><img class="dash_logout" src="{{ url_for('static', filename='./image/logout.png') }}"></a>
       
@@ -32,44 +32,25 @@
   var chartDoma = document.getElementById('maina');
   var myCharta = echarts.init(chartDoma);
   var data = {{revenue|tojson}};
-  var name = {{namelist|tojson}}
-  var optiona = {
-    title: {
-      text: '飯店瀏覽數據分析'
-    },
-    tooltip: {},
-    legend: {
-      data: ['']
-    },
-    xAxis: {
-      data: name
-    },
-    yAxis: {},
-    series: [{
-      name: '',
-      type: 'bar',
-      // symbol: 'circle',
-      symbolSize: 16,
-      data: data,
-      markPoint: {
-        data: [
-          {type: 'max', name: '銷量最高月份'},
-          {type: 'min', name: '銷量最低月份'}
-        ]
-      },
-      label: {
-        show: true,
-        position: 'top',
-        textStyle: {
-          fontSize: 15
-        }
-      }
-    }
-    ],
-    legend: {
-      show: true
-    },
-  };
+  let name1 = {{namelist|tojson}}
+
+  var option = {
+            title: {
+                text: '飯店瀏覽次數'
+            },
+            legend: {
+                data: ['銷量']
+            },
+            xAxis: {
+                data: name1
+            },
+            yAxis: {},
+            series: [{
+                name: '科目',
+                type: 'bar',
+                data: data
+            }]
+        };
 
   setTimeout(function() {
     run();
@@ -79,9 +60,8 @@
     update();
   }, 3000);
 
-  optiona && myCharta.setOption(optiona);
-  optionb && myChartb.setOption(optionb);
-  optionc && myChartc.setOption(optionc);
+  option && myCharta.setOption(option);
+
       
 </script>
 

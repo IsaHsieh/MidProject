@@ -625,6 +625,7 @@ def dashboard():
     #     countList.append(i[0])
     print("----------------")
     print(revenue)
+    print(namelist)
     return render_template('dashboard.html',  revenue = revenue  ,  namelist = namelist)
 
 @app.route('/logout')  
