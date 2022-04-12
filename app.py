@@ -256,17 +256,10 @@ def add_product():
     sql = 'SELECT * FROM CART WHERE EMAIL =' + '\''+ user_id + '\''
     cursor.execute(sql)
     data = cursor.fetchone()
-
+    time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     if( data == None): #假如購物車裡面沒有他的資料
-        
-
-
-
         random1 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
-        print(random1)
         
-        
-        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sql = 'INSERT INTO CART VALUES (' + '\'' + user_id + '\'' +  ',' + '\'' + time + '\'' + ',' + '\'' + random1 + '\'' ')'
         print(sql)
         cursor.execute(sql)
@@ -282,6 +275,11 @@ def add_product():
     cursor.execute(sql)
     product = cursor.fetchone()    
 
+    sql = 'SELECT UID2 FROM USER2 WHERE EMAIL = ' +'\''+ user_id +'\''
+    print(sql)
+    cursor.execute(sql)
+    uid3 = cursor.fetchone()[0]    
+    print(uid3)
     sql = 'SELECT PRICE FROM HOTEL WHERE hid = ' +'\''+ hid +'\''
     print("3:"+sql)
     cursor.execute(sql)
@@ -289,7 +287,7 @@ def add_product():
     one = '1'
     # 如果購物車裡面沒有的話 把他加一個進去
     if(product == None):
-        sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ' , ' + '\''+ one + '\'' +  ')'
+        sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ' , ' + '\''+ one + '\'' + ' , ' + '\''+ uid3 + '\'' +  ' , ' + '\'' + str(time) + '\'' +  ')'
         print("4:"+sql)
         cursor.execute(sql)
         connection.commit()
