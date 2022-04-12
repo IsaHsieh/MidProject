@@ -302,7 +302,7 @@ def add_product():
         if len(data) == 0:
             
             print("沒資料")
-            sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ' , ' + '\''+ one + '\'' +  ')'
+            sql = 'INSERT INTO RECORD VALUES (' + '\''+ user_id + '\'' +','+ '\'' + price +'\''+ ',' + '\''+ tno  + '\''+ ' , '+ '\''+ hid + '\'' + ' , ' + '\''+ one + '\'' + ' , ' + '\''+ uid3 + '\'' +  ' , ' + '\'' + str(time) + '\'' +  ')'
            
             print("11:"+sql)
             cursor.execute(sql)
