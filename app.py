@@ -561,10 +561,8 @@ def order():
 def dashboard():
     revenue = []
     namelist = []
-
     cursor.prepare('SELECT HID , HNAME FROM HOTEL')
     cursor.execute(None)
-        
     row = cursor.fetchall()
     for i in range(len(row)):
         namelist.append(row[i][1])
@@ -575,57 +573,6 @@ def dashboard():
             revenue.append(0)
         else:
             revenue.append(wow[0])
-                
-
-        
-        # cursor.prepare('SELECT EXTRACT(MONTH FROM ORDERTIME), COUNT(OID) FROM ORDER_LIST WHERE EXTRACT(MONTH FROM ORDERTIME)=:mon GROUP BY EXTRACT(MONTH FROM ORDERTIME)')
-        # cursor.execute(None, {"mon": i})
-        
-        # row = cursor.fetchall()
-        # if cursor.rowcount == 0:
-        #     dataa.append(0)
-        # else:
-        #     for k in row:
-        #         dataa.append(k[1])
-        
-    # cursor.prepare('SELECT SUM(TOTAL), CATEGORY FROM(SELECT * FROM PRODUCT,RECORD WHERE PRODUCT.hid = RECORD.hid) GROUP BY CATEGORY')
-    # cursor.execute(None)
-    # row = cursor.fetchall()
-    # datab = []
-    # for i in row:
-    #     temp = {
-    #         'value': i[0],
-    #         'name': i[1]
-    #     }
-    #     datab.append(temp)
-    
-    # cursor.prepare('SELECT SUM(PRICE), MEMBER.EMAIL, MEMBER.NAME FROM ORDER_LIST, MEMBER WHERE ORDER_LIST.MID = MEMBER.MID AND MEMBER.IDENTITY = :identity AND ROWNUM<=5 GROUP BY MEMBER.MID, MEMBER.NAME ORDER BY SUM(PRICE) DESC')
-    # cursor.execute(None, {'identity':'user'})
-    # row = cursor.fetchall()
-    
-    # datac = []
-    # nameList = []
-    # counter = 0
-    
-    # for i in row:
-    #     counter = counter + 1
-    #     datac.append(i[0])
-    # for j in row:
-    #     nameList.append(j[2])
-    
-    # counter = counter - 1
-    
-    # cursor.prepare('SELECT COUNT(*), MEMBER.MID, MEMBER.NAME FROM ORDER_LIST, MEMBER WHERE ORDER_LIST.MID = MEMBER.MID AND MEMBER.IDENTITY = :identity AND ROWNUM<=5 GROUP BY MEMBER.MID, MEMBER.NAME ORDER BY COUNT(*) DESC')
-    # cursor.execute(None, {'identity':'user'})
-    # row = cursor.fetchall()
-    
-    # countList = []
-    
-    # for i in row:
-    #     countList.append(i[0])
-    print("----------------")
-    print(revenue)
-    print(namelist)
     return render_template('dashboard.html',  revenue = revenue  ,  namelist = namelist)
 
 @app.route('/logout')  

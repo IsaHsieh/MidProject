@@ -46,10 +46,20 @@
             },
             yAxis: {},
             series: [{
-                name: '科目',
-                type: 'bar',
-                data: data
-            }]
+      name: '',
+      type: 'bar',
+      // symbol: 'circle',
+      symbolSize: 16,
+      data: data,
+      label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 15
+        }
+      }
+    }
+    ]
         };
 
   setTimeout(function() {
