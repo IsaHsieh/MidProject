@@ -10,12 +10,8 @@
   <div id="dashboard">
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">訂單數量分析</button>
-        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">書本銷量分類</button>
-        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">消費總額排名</button>        
-      </div>
-      <a href="{{ url_for('manager') }}" title="回書店管理"><img class="dash_manager" src="{{ url_for('static', filename='./image/shop.png') }}"></a>
-
+       </div>
+      <a href="{{ url_for('manager') }}" title="回飯店管理"><img class="dash_manager" src="{{ url_for('static', filename='./image/notebook.png') }}"></a>
       <a href="{{ url_for('logout') }}" title="登出"><img class="dash_logout" src="{{ url_for('static', filename='./image/logout.png') }}"></a>
       
     </nav>

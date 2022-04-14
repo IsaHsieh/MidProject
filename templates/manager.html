@@ -8,7 +8,7 @@
 {% block content%}
 <div class="btn_div">
   <h1 class="book_title left">Hotels Notebook.</h1>
-  <a href="{{ url_for('dashboard') }}"  title="資料分析"><img class="cart" src="{{ url_for('static', filename='./image/dashboard.png') }}"></a>
+  <a href="{{ url_for('dashboard') }}"  title="資料分析"><img class="analyze" src="{{ url_for('static', filename='./image/dashboard.png') }}"></a>
   <a href="{{ url_for('logout') }}"  title="登出"><img class="logout" src="{{ url_for('static', filename='./image/logout.png') }}"></a>
 </div>
 <div class="btn_div">
@@ -40,7 +40,7 @@
 
 <div class="book_table">
   <form  method='post' action={{ url_for('manager') }} >
-    <table cellpadding="10" border='3'>
+    <table cellpadding="20" border='0'>
       <tr>
         <th>飯店編號</th>
         <th>飯店名稱</th>
@@ -68,7 +68,7 @@
       {% endfor %}
     </table>
       <div class="book_table">
-        <a href={{ url_for('add')}}><button value="new" name="new" type="button"> 上架新商品</button></a>
+        <a href={{ url_for('add')}}><button value="new" name="new" type="button"> 上架新飯店</button></a>
       </div>
     </form>
 

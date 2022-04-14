@@ -9,7 +9,7 @@
 
 <h1 class="book_title">Hotels Notebook.</h1>
 <div class="book_table">
-  <table cellpadding="10" border='3'>
+  <table cellpadding="10" border='0'>
     <tr>
       <th>飯店編號</th>
       <td> {{ data.商品編號 }}</td>
@@ -23,12 +23,14 @@
       <td> {{ data.單價 }}</td>
     </tr>
     <tr>
-      <th>敘述</th>
+      <th>描述</th>
       <td> {{ data.類別 }}</button></td>
     </tr>
 </table>
 </div>
 <div class="btn_div">
-  <button><a href="{{ url_for('bookstore') }}">回上一頁</button> 
+  <a href="{{ url_for('bookstore') }}">
+    <button class="back_btn">回上一頁</button>
+  </a>
 </div>
 {% endblock content%}
