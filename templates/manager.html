@@ -7,13 +7,12 @@
 
 {% block content%}
 <div class="btn_div">
-  <h1 class="book_title left">Hotels Notebook.</h1>
+  <h1 class="title2"><a href="{{ url_for('index') }}" style="color:#456268;" title="首頁">Hotels Notebook.</a></h1>
   <a href="{{ url_for('dashboard') }}"  title="資料分析"><img class="analyze" src="{{ url_for('static', filename='./image/dashboard.png') }}"></a>
   <a href="{{ url_for('logout') }}"  title="登出"><img class="logout" src="{{ url_for('static', filename='./image/logout.png') }}"></a>
-</div>
-<div class="btn_div">
   <p class="welcome">歡迎 , 管理者：{{user}}</p>
 </div>
+
 {% with messages = get_flashed_messages() %}
 {% if messages[0] == 'No permission' %}
   
@@ -67,7 +66,7 @@
       </tr>
       {% endfor %}
     </table>
-      <div class="book_table">
+      <div class="book_table_add">
         <a href={{ url_for('add')}}><button value="new" name="new" type="button"> 上架新飯店</button></a>
       </div>
     </form>

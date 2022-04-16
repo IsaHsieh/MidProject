@@ -7,11 +7,9 @@
 
 {% block content%}
 <div class="btn_div">
-  <h1 class="title1"><a href="{{ url_for('index') }}" style="color:#456268;" title="首頁">Hotels Notebook.</a></h1>
+  <h1 class="title2"><a href="{{ url_for('index') }}" style="color:#456268;" title="首頁">Hotels Notebook.</a></h1>
   <a href="{{ url_for('cart') }}" title="收藏清單"><img class="cart" src="{{ url_for('static', filename='./image/notebook.png') }}"></a>
   <a href="{{ url_for('logout') }}"  title="登出"><img class="logout" src="{{ url_for('static', filename='./image/logout.png') }}"></a>
-  </div>
-<div class="btn_div">
   <p class="welcome">{{user}} , 歡迎回來!</p>
 </div>
 

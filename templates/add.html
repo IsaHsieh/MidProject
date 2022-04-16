@@ -8,12 +8,12 @@
 
 {% block content%}
 
-<h1 class="book_title">Hotels Notebook.</h1>
+<h1 class="title1"><a href="{{ url_for('index') }}" style="color:#456268;" title="首頁">Hotels Notebook.</a></h1>
 <div class="book_table">
   <form method="post" action={{ url_for('add') }}>
     <table cellpadding="10" border='0'>
       <tr>
-        <th>商品編號</th>
+        <th>飯店編號</th>
         <td>*系統自動生成*</td>
       </tr>
       <tr>
@@ -33,7 +33,7 @@
         <td><input type="text" name="category"></td>
       </tr>
             <tr>
-        <th>在哪個平台</th>
+        <th>訂房平台</th>
         <td>
           <select name="platform">
             <option value="w003">TripAdvisor</option>
@@ -43,8 +43,8 @@
       </tr>
     </table>
     <div class="btn_div">
-      <button type="submit">新增商品</button> 
-      <button><a href="{{ url_for('manager') }}">回上一頁</button> 
+      &emsp;&emsp;<button type="submit">新增商品</button> 
+      <button><a href="{{ url_for('manager') }}" style="color:#FFFFFF;">回上一頁</button> 
     </div>
   </form>
 </div>

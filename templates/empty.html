@@ -7,15 +7,12 @@
 
 {% block content%}
 <div class="btn_div">
-  <h1 class="book_title left">Hotels Notebook.</h1>
-  <a href="{{ url_for('cart') }}"><img class="cart" src="{{ url_for('static', filename='./image/shopping_cart.png') }}"></a>
+  <h1 class="title2"><a href="{{ url_for('index') }}" style="color:#456268;" title="首頁">&emsp;Hotels Notebook.</a></h1>
+  <a href="{{ url_for('cart') }}"><img class="cart" src="{{ url_for('static', filename='./image/notebook.png') }}"></a>
+  <a href="{{ url_for('logout') }}"  title="登出"><img class="logout" src="{{ url_for('static', filename='./image/logout.png') }}"></a>
 </div>
 <div class="empty">
-    <img class="empty_pic" src="{{ url_for('static', filename='./image/shopping_cart_woman.png') }}">
-    <p>目前尚無收藏!</p>
-</div>
-
-<div class="btn_div">
+    <p>目前尚無收藏飯店，請按下方按鍵返回上頁</p>
     <a href="{{ url_for('bookstore') }}"><button>回上一頁</button></a>
-  </div>
+</div>
 {% endblock content%}

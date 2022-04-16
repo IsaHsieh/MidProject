@@ -7,7 +7,7 @@
 
 {% block content%}
 
-<h1 class="book_title">Hotels Notebook.</h1>
+<h1 class="title1"><a href="{{ url_for('index') }}" style="color:#456268;" title="首頁">Hotels Notebook.</a></h1>
 <div class="book_table">
   <table cellpadding="10" border='0'>
     <tr>
@@ -28,9 +28,7 @@
     </tr>
 </table>
 </div>
-<div class="btn_div">
-  <a href="{{ url_for('bookstore') }}">
-    <button class="back_btn">回上一頁</button>
-  </a>
+<div class="btn_div2">
+  <a href="{{ url_for('bookstore') }}"><button type="button">回上一頁</button></a>
 </div>
 {% endblock content%}

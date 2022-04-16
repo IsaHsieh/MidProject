@@ -6,9 +6,7 @@
 {% block title %}Hotels Notebook.{% endblock title%}
 
 {% block content%}
-<div class="btn_div">
-  <h1 class="book_title left">Hotels Notebook.</h1>
-</div>
+<h1 class="title1"><a href="{{ url_for('index') }}" style="color:#456268;" title="首頁">&emsp;Hotels Notebook.</a></h1>
 {% with messages = get_flashed_messages() %}
 {% if messages[0] == 'No permission' %}
   
@@ -43,7 +41,6 @@
     </table>
     <div class="book_table">
       <button type="submit" value="edit" name="user_edit" >繼續瀏覽</button>
-      <button type="submit" value="edit" name="buy" >瀏覽收藏清單</button>
     </div>
   </form>
 </div>

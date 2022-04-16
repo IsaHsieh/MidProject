@@ -4,7 +4,8 @@ body {
     font-family: "Noto Sans TC","Segoe UI", Arial, sans-serif;
     background-image: url('./image/background.png');
     background-repeat:no-repeat;
-    background-size:cover;
+    background-size:100% 100%;
+    background-attachment: fixed;
     background-color: #FCF8EC;
     position: relative;
     height: 100vh;
@@ -33,13 +34,24 @@ body {
     color:#456268;
 }
 
-/*.register_title{
+.register_title{
     text-align: center;
     font-size: 30px;
     margin-bottom:50px;
     margin-top:10%;
     color:#456268;
-}*/
+}
+
+.title1{
+    text-align: center;
+    margin-top:5%;
+    width: 100%;
+}
+
+.title2{
+    width: 100%;
+    text-align: left;
+}
 
 .index_btn{
     width: 100px;
@@ -58,10 +70,57 @@ body {
 .btn_div{
     display:flex;
     justify-content: left;
-    margin-top:40px;
+    margin-top:5%;
     margin-left: 14%;
     color:#456268;
 }
+
+.btn_div_index{
+    display:flex;
+    justify-content: left;
+    margin-top:2%;
+    margin-left: 13%;
+    color:#456268;
+}
+
+.btn_div1{
+    display:flex;
+    justify-content: left;
+    margin-top:15%;
+    margin-left: 14%;
+    color:#456268;
+}
+
+.btn_div2 button{
+    position: relative;
+    font-size: 15px;
+    top:10vh;
+    left:48vw;
+    padding:10px;
+    background-color: #79A3B1;
+    color:white;
+    border-radius: 50px;
+    border: 0px;
+    cursor: pointer; 
+}
+
+.empty{
+    position: relative;
+    top:10vh;
+}
+
+.empty button{
+    position: relative;
+    font-size: 15px;
+    top:10vh;
+    padding:10px;
+    background-color: #79A3B1;
+    color:white;
+    border-radius: 50px;
+    border: 0px;
+    cursor: pointer; 
+}
+
 .back_btn{
     position: absolute;
     width:80px;
@@ -71,7 +130,7 @@ body {
     bottom:0;
     left:0;
     margin:auto;
-    padding:10px;
+    padding:5px;
     background-color: #79A3B1;
     color:white;
     border-radius: 50px;
@@ -81,11 +140,20 @@ body {
 
 .option_div{
     margin: 0px 10px 0px 0px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,-50%);
 }
 .form_div{
     text-align: center;
-    margin-top: 40vh;
+    margin-top: 20%;
 }
+
+.form_div1{
+    text-align: center;
+    margin-top: 50px;
+}
+
 input{
     height: 30px;
     width: 200px;
@@ -121,8 +189,17 @@ input{
     display: flex;
     justify-content: center;
     width:100%;
-	margin-top:60px;
+    margin-top:40px;
 	border:0;
+}
+
+.book_table_add{
+    margin-top: 30px;
+}
+
+.book_table_add a{
+    justify-content: center;
+    margin-top:20%;
 }
 
 .book_table th {
@@ -186,13 +263,13 @@ input{
 .analyze{
     height: 40px;
     position: absolute;
-    left:85%;
+    left:86%;
     top: 25px;
 }
 
 .analyze:hover{
     position: absolute;
-    left:85%;
+    left:86%;
     top: 20px;
 }
 
@@ -204,10 +281,13 @@ a{
     text-decoration: none;
 }
 .welcome{
-    margin: 0px;
+    width:100%;
+    position: relative;
+    left:10vw;
+    top:2.5vh;
     font-size: 16px;
 }
-button{
+.button{
     cursor: pointer;
     position: center;
 }

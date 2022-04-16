@@ -8,8 +8,7 @@
 
 {% block content%}
 
-<h1 class="book_title">Hotels Notebook.</h1>
-<div class="book_table">
+<h1 class="title1"><a href="{{ url_for('index') }}" style="color:#456268;" title="首頁">&emsp;Hotels Notebook.</a></h1><div class="book_table">
   <form method="post" action={{ url_for('edit') }}>
     <table cellpadding="10" border='0'>
       <tr>
@@ -35,9 +34,9 @@
   
       </tr>
     </table>
-    <div class="btn_div">
-      <button type="submit">確定修改</button> 
-      <a href="{{ url_for('manager') }}"><button type="button">回上一頁</button></a>
+    <div class="btn_div1">
+      &emsp;&emsp;<button type="submit">確定修改</button> 
+      &emsp;<a href="{{ url_for('manager') }}"><button type="button">回上一頁</button></a>
     </div>
   </form>
 </div>
