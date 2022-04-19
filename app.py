@@ -6,7 +6,6 @@ from flask import url_for, redirect, flash
 from flask import render_template
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from datetime import datetime
-from numpy import identity, product
 import random, string
 from sqlalchemy import null
 import cx_Oracle
@@ -78,7 +77,7 @@ def login():
             login_user(user)
 
             if( identity == 'user'):
-                return redirect(url_for('bookstore'))
+                return redirect(url_for('hotelstore'))
             else:
                 return redirect(url_for('manager'))
         
@@ -129,9 +128,9 @@ def register():
     return render_template('register.html')
 
 # 書店內部
-@app.route('/bookstore', methods=['GET', 'POST'])
+@app.route('/hotelstore', methods=['GET', 'POST'])
 @login_required # 使用者登入後才可以看
-def bookstore():
+def hotelstore():
 
     # 以防管理者誤闖
     if request.method == 'GET':
@@ -175,7 +174,7 @@ def bookstore():
         book_data.append(book)
 
     # 抓取所有書的資料 用一個 List 包 Json 格式，在 html 裡可以用 for loop 呼叫
-    return render_template('bookstore.html', book_data=book_data, user=current_user.name)
+    return render_template('hotelstore.html', book_data=book_data, user=current_user.name)
 
 # 會員購物車
 @app.route('/cart', methods=['GET', 'POST'])
@@ -212,7 +211,7 @@ def cart():
         elif "user_edit" in request.form:
             change_order()
                 
-            return redirect(url_for('bookstore'))
+            return redirect(url_for('hotelstore'))
         
         elif "buy" in request.form:
 
@@ -402,7 +401,7 @@ def manager():
     if request.method == 'GET':
         if( current_user.role == 'user'):
             flash('No permission')
-            return redirect(url_for('bookstore'))
+            return redirect(url_for('hotelstore'))
 
     if 'delete' in request.values: #要刪除
 
@@ -437,7 +436,7 @@ def book():
         book = {
             '商品編號': i[0],
             '商品名稱': i[1],
-            '商品售價': i[2],
+            '商品售價': i[6],
             '商品類別': i[3]
         }
         book_data.append(book)
@@ -451,7 +450,7 @@ def edit():
     if request.method == 'GET':
         if( current_user.role == 'user'):
             flash('No permission')
-            return redirect(url_for('bookstore'))
+            return redirect(url_for('hotelstore'))
 
     if request.method == 'POST':
         hid = request.values.get('hid')
@@ -582,4 +581,5 @@ def logout():
 if __name__ == '__main__':
     app.debug = True #easy to debug
     app.secret_key = "sgdheewetwggsdfsdfsdgdf"
-    app.run()
+    app.run(host='0.0.0.0', port=5555)
+

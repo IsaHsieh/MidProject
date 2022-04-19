@@ -38,7 +38,7 @@
       <tr>
         <td> {{ book.商品編號 }}</td>
         <td> {{ book.商品名稱 }}</td>
-        <td><a href="{{ url_for('bookstore', hid=book.商品編號) }}"><button type="button">更多資訊</button></a></td>
+        <td><a href="{{ url_for('hotelstore', hid=book.商品編號) }}"><button type="button">更多資訊</button></a></td>
         <td><button type="submit" value="{{book.商品編號}}" name="hid" >加到我的收藏</button></td>
         
         <!-- 傳遞商品編號 -->
